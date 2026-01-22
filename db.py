@@ -28,11 +28,11 @@ def init_database():
         conn.commit()
         cursor.close()
         conn.close()
-        print("Database initialized successfully.")
+        print("✅Database initialized successfully.")
         return True
 
     except Exception as e:
         print(f"Error initializing database: {e}")
         return False
     
-init_database()
+# init_database()
