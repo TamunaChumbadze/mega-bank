@@ -21,7 +21,7 @@ def register_user(username, password):
         # Check if username already exists
         cursor.execute("SELECT id FROM users WHERE username = %s", (username,))
         if cursor.fetchone():
-            print("Username '{username}' already exists.")
+            print(f"Username '{username}' already exists.")
             return False
         # Hash password and insert user
         password_hash = hash_password(password)
@@ -29,9 +29,12 @@ def register_user(username, password):
             "INSERT INTO users (username, password_hash) VALUES (%s, %s) RETURNING id", 
             (username, password_hash)
         )
-        user_id = cursor.fetchone()[0]
-        
-        # Create account for the user with 0 balamce
+        result = cursor.fetchone()
+        if result == None:
+            raise Exception("Failed to retrieve user ID after insertion.")
+        user_id = result[0]
+
+        # Create account for the user with 0 balance
         cursor.execute(
             "INSERT INTO accounts (user_id, balance) VALUES (%s, 0.00)", 
             (user_id,)
